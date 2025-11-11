@@ -72,7 +72,7 @@ async function loadNodes() {
 // ========================
 
 // Local master key for Core actions (Hunn$0330)
-const MASTER_KEY = "Hunn$0330";
+const MASTER_KEY = "ilovepixiee";
 
 async function loadTokens() {
   try {
