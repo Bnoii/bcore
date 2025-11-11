@@ -11,6 +11,27 @@ import musicRouter from "./routes/music.js";
 import translateRouter from "./routes/translate.js";
 import doubtRouter from "./routes/doubt.js";
 
+// after other imports
+import nodeRouter from "./routes/core/nodes.js";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// ...existing middleware
+
+// Core API
+app.use("/core/nodes", nodeRouter);
+
+// Serve the Core Dashboard (static)
+app.use("/core", express.static(path.join(__dirname, "public/core")));
+
+// Nice redirect: /core -> dashboard page
+app.get("/core", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/core/index.html"));
+});
+
+
 dotenv.config();
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
