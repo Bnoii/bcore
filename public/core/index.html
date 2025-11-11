@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Jinx Core Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="./core.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <span class="logo">✦</span> Jinx Core
+      <span class="ver">v3.A</span>
+    </div>
+    <div class="actions">
+      <button id="btnRefresh" class="btn">Refresh</button>
+      <label class="toggle">
+        <input type="checkbox" id="autoRefresh" checked />
+        <span>Auto-refresh</span>
+      </label>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="cards">
+      <div class="card">
+        <div class="label">Online</div>
+        <div id="statOnline" class="value">—</div>
+      </div>
+      <div class="card">
+        <div class="label">Total Nodes</div>
+        <div id="statTotal" class="value">—</div>
+      </div>
+      <div class="card">
+        <div class="label">Window</div>
+        <div id="statWindow" class="value">2m</div>
+      </div>
+      <div class="card">
+        <div class="label">Core URL</div>
+        <div class="mono small" id="coreUrl">—</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header class="panel-head">
+        <h3>Registered Nodes</h3>
+        <div class="filters">
+          <input id="search" class="input" placeholder="Search siteId / url / type..." />
+          <select id="typeFilter" class="input">
+            <option value="">All types</option>
+            <option value="frontend">frontend</option>
+            <option value="admin">admin</option>
+            <option value="tenant">tenant</option>
+            <option value="standard">standard</option>
+          </select>
+        </div>
+      </header>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Site ID</th>
+              <th>Type</th>
+              <th>Version</th>
+              <th>URL</th>
+              <th>Last Seen</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div>© Jinx Network Core — All rights reserved.</div>
+    <div class="mono small" id="footInfo"></div>
+  </footer>
+
+  <script>
+    // expose Core URL to UI footer
+    window.JINX_CORE_URL = location.origin;
+  </script>
+  <script src="./core.js"></script>
+</body>
+</html>
