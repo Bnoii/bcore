@@ -7,4 +7,4 @@ setInterval(() => {
     .get(`${URL}/ping`)
     .then(() => console.log("🔁 KeepAlive ping sent"))
     .catch((err) => console.error("Ping failed:", err.message));
-}, 1000 * 60 * 7); // every 7 minutes
+}, 1000 * 60 * 3); // every 3 minutes
