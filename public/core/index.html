@@ -22,6 +22,7 @@
   </div>
 
   <main class="container">
+    <!-- ====== CORE STATS ====== -->
     <section class="cards">
       <div class="card">
         <div class="label">Online</div>
@@ -41,6 +42,7 @@
       </div>
     </section>
 
+    <!-- ====== REGISTERED NODES ====== -->
     <section class="panel">
       <header class="panel-head">
         <h3>Registered Nodes</h3>
@@ -72,6 +74,33 @@
         </table>
       </div>
     </section>
+
+    <!-- ====== CORE TOKENS PANEL ====== -->
+    <section class="panel" id="tokensPanel">
+      <header class="panel-head">
+        <h3>Core Tokens</h3>
+        <div class="filters">
+          <button id="btnNewToken" class="btn-primary">+ New Token</button>
+          <button id="btnReloadTokens" class="btn">Reload</button>
+        </div>
+      </header>
+
+      <div id="tokenList" class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Token</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Expires</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tokenRows"></tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
   <footer class="foot">
@@ -80,7 +109,6 @@
   </footer>
 
   <script>
-    // expose Core URL to UI footer
     window.JINX_CORE_URL = location.origin;
   </script>
   <script src="./core.js"></script>
