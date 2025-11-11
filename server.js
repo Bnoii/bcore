@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import { fileURLToPath } from "url";
 import path from "path";
 
-import './keepAlive.js'; // KeepAlive pinger
+import "./keepAlive.js"; // KeepAlive internal pinger
 import aiRouter from "./routes/ai.js";
 import musicRouter from "./routes/music.js";
 import translateRouter from "./routes/translate.js";
@@ -18,28 +18,48 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection (optional if URI present)
+// 🧠 MongoDB connection with auto-reconnect
 if (process.env.MONGO_URI) {
-  mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => console.log("✅ MongoDB connected"))
-    .catch(err => console.error("❌ Mongo error:", err));
+  const connectDB = async () => {
+    try {
+      await mongoose.connect(process.env.MONGO_URI, {
+        serverSelectionTimeoutMS: 5000, // fail fast if connection issue
+      });
+      console.log("✅ MongoDB connected");
+    } catch (err) {
+      console.error("❌ Mongo error:", err.message);
+      console.log("🔁 Retrying MongoDB connection in 5s...");
+      setTimeout(connectDB, 5000);
+    }
+  };
+
+  mongoose.connection.on("disconnected", () => {
+    console.warn("⚠️ MongoDB disconnected! Retrying...");
+    connectDB();
+  });
+
+  connectDB();
 } else {
-  console.warn("⚠️ No MONGO_URI set. Set it in Railway Variables.");
+  console.warn("⚠️ No MONGO_URI set. Set it in Render Environment Variables.");
 }
 
-// Health & root
+// 🌐 Health & root routes
 app.get("/", (req, res) => res.send("🧠 Jinx Core v3.A (bcore) running."));
 app.get("/ping", (req, res) => res.send("pong"));
 
-// Routers
+// 🧩 Routers
 app.use("/jinx/ai", aiRouter);
 app.use("/music", musicRouter);
 app.use("/translate", translateRouter);
 app.use("/jinx/doubt", doubtRouter);
 
-// 404 fallback
+// ⚠️ 404 fallback
 app.use((req, res) => res.status(404).json({ error: "Not found" }));
 
+// 🚀 Start server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`🚀 Jinx Core running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Jinx Core running on port ${PORT}`);
+  console.log(`🌍 App URL: ${process.env.APP_URL || "not set"}`);
+  console.log(`🌱 Env: ${process.env.NODE_ENV}`);
+});
