@@ -22,6 +22,8 @@ import doubtRouter from "./routes/doubt.js";
 // Core (Network/Nodes) router
 import nodeRouter from "./routes/core/nodes.js";
 
+import tokenRouter from "./routes/core/tokens.js";
+
 // __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -64,7 +66,7 @@ app.use("/jinx/ai", aiRouter);
 app.use("/music", musicRouter);
 app.use("/translate", translateRouter);
 app.use("/jinx/doubt", doubtRouter);
-
+app.use("/core/tokens", tokenRouter);
 // Core API + Dashboard
 app.use("/core/nodes", nodeRouter); // API
 app.use("/core", express.static(path.join(__dirname, "public/core"))); // static dashboard
