@@ -46,4 +46,16 @@ router.get("/list", async (req, res) => {
   }
 });
 
+// Quick stats: online in last 2 minutes
+router.get("/stats", async (req, res) => {
+  try {
+    const since = new Date(Date.now() - 2 * 60 * 1000);
+    const all = await Node.countDocuments();
+    const online = await Node.countDocuments({ lastSeen: { $gte: since } });
+    res.json({ success: true, all, online, windowMinutes: 2 });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get stats" });
+  }
+});
+
 export default router;
