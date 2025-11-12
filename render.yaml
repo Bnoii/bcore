@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: bcore
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: DEFAULT_VOICE_ENGINE
+        value: openvoice
+      - key: OPENVOICE_URL
+        # Replace with your OpenVoice service URL after deploying it:
+        value: https://openvoice-bridge.onrender.com
+      - key: VOICE_UPLOAD_DIR
+        value: uploads/voices
+      - key: VOICE_OUTPUT_DIR
+        value: uploads/voices
+
+  - type: web
+    name: openvoice-bridge
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app -b 0.0.0.0:5005
+    rootDir: python_service
