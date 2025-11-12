@@ -1,0 +1,9 @@
+flask==3.0.0
+gunicorn==21.2.0
+# Add OpenVoice + deps after you provision compute:
+# torch==2.3.1+cpu
+# torchaudio==2.3.1+cpu
+# git+https://github.com/myshell-ai/OpenVoice.git
+# librosa
+# soundfile
+# ffmpeg-python
