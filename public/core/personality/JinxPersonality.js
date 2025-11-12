@@ -6,11 +6,9 @@ import { logEmotion } from "../emotion/EmotionTrail.js";
 import { interpretIntent } from "../intent/IntentInterpreter.js";
 import { reflectBehavior } from "../selfassist/MetaCognition.js";
 import { checkSystemHealth } from "../selfassist/SelfRepair.js";
+import { queryGroq } from "../../../services/llm/groq.js"; // 🧠 <-- New import
 
-/**
- * Holds transient personality state between messages.
- * You can later replace this with Mongo or file-based memory.
- */
+// Holds transient personality state
 const state = {
   version: "Extreme-v1",
   previousTone: "neutral",
@@ -24,7 +22,7 @@ const state = {
  */
 export async function generateReply(userText) {
   try {
-    // 1. Understand what user wants
+    // 1. Understand what the user wants
     const intentData = interpretIntent(userText);
     state.lastIntent = intentData.intent;
 
@@ -35,8 +33,8 @@ export async function generateReply(userText) {
     const tone = selectTone(mood, state.previousTone);
     state.previousTone = tone;
 
-    // 4. Generate base reply text (replace later with Groq / OpenAI call)
-    const replyBase = composeReply(userText, tone, intentData.intent);
+    // 4. Generate base reply from Groq model
+    const replyBase = await queryGroq(userText, tone, intentData.intent);
 
     // 5. Apply tone transformations (adds vocal/wording hints)
     const replyFinal = applyTone(replyBase, tone);
@@ -51,21 +49,4 @@ export async function generateReply(userText) {
     console.error("⚠️ Jinx Personality error:", err);
     return "Something glitched in my thoughts… give me a second.";
   }
-}
-
-/**
- * Temporary reply generator.
- * You’ll replace this with services/llm/groq.js or any LLM endpoint.
- */
-function composeReply(userText, tone, intent) {
-  if (intent === "request_music") {
-    return `Let me find something to match your mood. 🎵`;
-  }
-  if (intent === "emotional_support") {
-    return `I can feel that... want to talk more about it?`;
-  }
-  if (intent === "information") {
-    return `Here’s what I think about that.`;
-  }
-  return `You said: "${userText}".`;
 }
