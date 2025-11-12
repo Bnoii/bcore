@@ -22,8 +22,10 @@ import jinxAiRoutes from "./routes/jinx/ai.js";
 
 // Core (Network/Nodes) router
 import nodeRouter from "./routes/core/nodes.js";
-
 import tokenRouter from "./routes/core/tokens.js";
+
+// 🔹 NEW: Voice cloning route
+import voiceCloneRoute from "./routes/voice/clone.js";
 
 // __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -69,12 +71,17 @@ app.use("/translate", translateRouter);
 app.use("/jinx/doubt", doubtRouter);
 app.use("/core/tokens", tokenRouter);
 app.use("/jinx", jinxAiRoutes);
+
 // Core API + Dashboard
 app.use("/core/nodes", nodeRouter); // API
 app.use("/core", express.static(path.join(__dirname, "public/core"))); // static dashboard
 app.get("/core*", (_req, res) =>
   res.sendFile(path.join(__dirname, "public/core/index.html"))
 );
+
+// 🔹 NEW: Voice cloning endpoints
+app.use("/voice", voiceCloneRoute);
+app.use("/static", express.static(path.join(__dirname, "uploads/voices")));
 
 // 404
 app.use((_req, res) => res.status(404).json({ error: "Not found" }));
@@ -85,4 +92,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Jinx Core running on port ${PORT}`);
   console.log(`🌍 App URL: ${process.env.APP_URL || "not set"}`);
   console.log(`🌱 Env: ${process.env.NODE_ENV || "development"}`);
+  console.log(`🎙️ Voice clone route live at /voice/clone`);
 });
