@@ -18,6 +18,7 @@ import aiRouter from "./routes/ai.js";
 import musicRouter from "./routes/music.js";
 import translateRouter from "./routes/translate.js";
 import doubtRouter from "./routes/doubt.js";
+import jinxAiRoutes from "./routes/jinx/ai.js";
 
 // Core (Network/Nodes) router
 import nodeRouter from "./routes/core/nodes.js";
@@ -67,6 +68,7 @@ app.use("/music", musicRouter);
 app.use("/translate", translateRouter);
 app.use("/jinx/doubt", doubtRouter);
 app.use("/core/tokens", tokenRouter);
+app.use("/jinx", jinxAiRoutes);
 // Core API + Dashboard
 app.use("/core/nodes", nodeRouter); // API
 app.use("/core", express.static(path.join(__dirname, "public/core"))); // static dashboard
