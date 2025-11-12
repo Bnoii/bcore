@@ -1,25 +1,61 @@
+
+databases:
+  - name: jinx-mongo
+    plan: free
+
 services:
   - type: web
     name: bcore
     env: node
     plan: free
+    region: singapore
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: npm run start
     envVars:
-      - key: DEFAULT_VOICE_ENGINE
-        value: openvoice
-      - key: OPENVOICE_URL
-        # Replace with your OpenVoice service URL after deploying it:
-        value: https://openvoice-bridge.onrender.com
-      - key: VOICE_UPLOAD_DIR
-        value: uploads/voices
-      - key: VOICE_OUTPUT_DIR
-        value: uploads/voices
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: MONGO_URI
+        fromDatabase:
+          name: jinx-mongo
+          property: connectionString
+      - key: VOICE_API
+        fromService:
+          name: jinx-voice-capsule
+          type: web
+          property: url
+      - key: MASTER_KEY
+        sync: false
+      - key: CORE_TOKEN
+        sync: false
 
   - type: web
-    name: openvoice-bridge
-    env: python
+    name: jinx-voice-capsule
+    env: node
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app -b 0.0.0.0:5005
-    rootDir: python_service
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm run dev
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: VOICES_ROOT
+        value: ./data/voices
+      - key: COQUI_TTS_URL
+        sync: false
+
+  - type: web
+    name: adminverse
+    env: node
+    plan: free
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm run dev
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        fromDatabase:
+          name: jinx-mongo
+          property: connectionString
